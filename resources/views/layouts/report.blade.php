@@ -9,7 +9,12 @@
     
     <title>Zpeed Auto-HR</title>
     {{-- <title>{{ config('app.name', 'Zpeed Auto-HR') }}</title> --}}
-    <!-- Fonts -->
+    
+	{{-- Fav Icon --}}
+    <link rel="shortcut icon" href="{{ asset('storage/images/favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('storage/images/apple-touch-icon.png') }}">
+	
+	<!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     

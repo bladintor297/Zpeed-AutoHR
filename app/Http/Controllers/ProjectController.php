@@ -85,6 +85,7 @@ class ProjectController extends Controller
                 ->join('staff', 'staff.staff_id', '=', 'claim.staff_id')
                 ->where('claim.project', $project->code)
                 ->where('claim.ref_id', '!=', '0')
+                ->where('claim.status', '!=', '2')
                 ->get();
         
         // Claim Names for Milleage
@@ -92,6 +93,7 @@ class ProjectController extends Controller
                 ->join('staff', 'staff.staff_id', '=', 'milleage.staff_id')
                 ->where('milleage.project', $project->code)
                 ->where('milleage.ref_id', '!=', '0')
+                ->where('milleage.status', '!=', '2')
                 ->get();
 
 
@@ -121,8 +123,8 @@ class ProjectController extends Controller
         $totalmilleage = Milleage::where('project', $project->code)->where('status', '1')->where('payment_status', '1')->sum('total');
         $total = $totalclaim+$totalmilleage;
 
-        $totalallclaim = Claim::where('project', $project->code)->where('ref_id', '!=', '0')->sum('amount');
-        $totalallmilleage = Milleage::where('project', $project->code)->where('ref_id', '!=', '0')->sum('total');
+        $totalallclaim = Claim::where('project', $project->code)->where('ref_id', '!=', '0')->where('status', '!=', '2')->sum('amount');
+        $totalallmilleage = Milleage::where('project', $project->code)->where('ref_id', '!=', '0')->where('status', '!=', '2')->sum('total');
         $totalall = $totalallclaim+$totalallmilleage;
 
         $pdf = PDF::loadView('project.project-pdf', compact(['project', 'total', 'totalall', 'claimamount']));

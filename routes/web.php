@@ -48,6 +48,10 @@ Route::get('/claim/edit/{id}', [App\Http\Controllers\ClaimController::class, 'ed
 Route::get('/approveCl/{id}', [ClaimController::class, 'approveCl'])->name('claim.approve')->middleware('role:1');;
 Route::get('/rejectCl/{id}', [ClaimController::class, 'rejectCl'])->name('claim.reject')->middleware('role:1');;
 Route::get('/generateClaim/{id}', [ClaimController::class, 'generatePDF'])->name('claim.generatePDF');
+Route::get('/claim/update/{id}', [App\Http\Controllers\MilleageController::class, 'update'])->name('claim.update');
+Route::get('/claimReject/{id}', [App\Http\Controllers\MilleageController::class, 'rejectOneClaim'])->name('claim.rejectOne');
+// Route::get('/claim/destroy/{id}', [App\Http\Controllers\MilleageController::class, 'destroy'])->name('claim.update');
+
 
 //Leave Routes
 Route::get('leave-status', '\App\Http\Controllers\LeaveController@status');

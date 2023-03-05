@@ -118,13 +118,19 @@ class ClaimController extends Controller
                         ->where('claim.ref_id', '=', $id)
                         ->get();
 
-        $claim = ($claim_ref->merge($claim_ref2))->unique('staff_id')->first();
+        $claim = ($claim_ref->merge($claim_ref2));
         return ($claim);
     }
 
     public static function countAmount($id){
         $amountclaim= Claim::where('ref_id', $id)->sum('amount');
         $amountmilleage=Milleage::where('ref_id',$id)->sum('total');
+        return ($amountclaim + $amountmilleage);
+    }
+
+    public static function countApproved($id){
+        $amountclaim= Claim::where('ref_id', $id)->where('status', '=', 1)->sum('amount');
+        $amountmilleage=Milleage::where('ref_id',$id)->where('status', '=', 1)->sum('total');
         return ($amountclaim + $amountmilleage);
     }
 
@@ -207,6 +213,20 @@ class ClaimController extends Controller
         $approved = ($approvedclaim->merge($approvedmilleage))->unique();
 
         // Rejected Claims
+
+        // $rejected = Claim::where('ref_id', '!=', '0')->get();
+        // $rejected2 = Milleage::where('ref_id', '!=', '0')->get();
+
+        // foreach ($rejected as $rj => $i){
+        //     if ($rejected->contains('status', 1))
+        //     $rejected = $rejected::whereIn('ref_id', $rejected->ref_id)->delete();
+        // }
+        // foreach ($rejected2 as $rj2 => $i){
+        //     if ($rejected2->contains('status', 1))
+        //     echo $i->ref_id;
+        // }
+
+        // return 123;
         $rejectedclaim = DB::table('claim')
                     ->select('ref_id', DB::raw('count(*) as total'))
                     ->where('status', '2')
@@ -222,7 +242,16 @@ class ClaimController extends Controller
                     ->pluck('ref_id');
         $rejected = ($rejectedclaim->merge($rejectedmilleage))->unique();
 
+        foreach ($rejected as $item =>$rj) {
+            $claim = Claim::where('ref_id', $rj)->get();
+            $milleage = Milleage::where('ref_id', $rj)->get();
+            $claim = $claim->merge($milleage);
 
+            if (($claim->contains('status',1)) || (($claim->contains('status',0)))){
+                unset($rejected[$item]);
+            }
+        }
+        
         return view('claim.claim-list')->with(['pending'=>$pending,'all'=>$all,'approved'=>$approved, 'rejected'=>$rejected]);
     }
 
@@ -315,6 +344,7 @@ class ClaimController extends Controller
         $claimsm = Milleage::where('staff_id', $staff_id)->where('ref_id', $id)->get();
         $claims = $claimsc->merge($claimsm);
         $sum = Claim::where('staff_id', $staff_id)->where('ref_id', $id)->sum('amount') + Milleage::where('staff_id', $staff_id)->where('ref_id', $id)->sum('total');
+        $sumapproved = Claim::where('staff_id', $staff_id)->where('ref_id', $id)->where('status', '!=', 2)->sum('amount') + Milleage::where('staff_id', $staff_id)->where('ref_id', $id)->where('status', '!=', 2)->sum('total');
         $status = Claim::where('staff_id', $staff_id)->where('ref_id', $id)->orderby('type')->first();
         $milleages = Milleage::where('staff_id', $staff_id)->where('ref_id', $id)->get();
         $parkings = Claim::where('staff_id', $staff_id)->where('ref_id', $id)->where('type', 'parking')->get();
@@ -324,7 +354,7 @@ class ClaimController extends Controller
         $offices = Claim::where('staff_id', $staff_id)->where('ref_id', $id)->where('type', 'office')->get();
         $others = Claim::where('staff_id', $staff_id)->where('ref_id', $id)->where('type', 'others')->get();
         return view('claim.claim-details')->with(['id'=>$id,'staff'=>$staff, 'ref'=>$ref,'claims'=>$claims,'parkings'=>$parkings, 'accomodations'=>$accomodations, 'projectx' => $projectx,
-                                                'projects'=>$projects,'meals'=>$meals,'offices'=>$offices,'others'=>$others, 'status'=>$status, 'milleages'=>$milleages, 'sum'=>$sum]);
+                                                'projects'=>$projects,'meals'=>$meals,'offices'=>$offices,'others'=>$others, 'status'=>$status, 'milleages'=>$milleages, 'sum'=>$sum, 'sumapproved'=>$sumapproved]);
     }
 
     /**
@@ -416,13 +446,13 @@ class ClaimController extends Controller
         
         $staff = $staff1->merge($staff2)->unique('staff_id')->first();
 
-        $claims = Claim::where('ref_id',$id)->get();
+        $claims = Claim::where('ref_id',$id)->where('status', 0)->get();
         foreach ($claims as $claim){
             $claim->status = 1; //Approved  
             $claim->save();
         }
 
-        $milleages = Milleage::where('ref_id', $id)->get();
+        $milleages = Milleage::where('ref_id', $id)->where('status', 0)->get();
         foreach ($milleages as $claim){ 
             $claim->status = 1; //Approved  
             $claim->save();
@@ -436,7 +466,7 @@ class ClaimController extends Controller
         
         $staff = Staff::where('staff_id', $staff->staff_id)->first();
         // return $staff;
-        Mail::to($staff->email)->send(new NotifyMail($mailData));
+        // Mail::to($staff->email)->send(new NotifyMail($mailData));
 
         return redirect()->back()->with('success', 'One claim has been approved');
     }
@@ -466,7 +496,7 @@ class ClaimController extends Controller
             'title' => 'Claim Rejected',
             'body' => 'Your claim id with reference number '.$id.' is rejected due to '.$reason.'.',
         ];
-        Mail::to($staff->email)->send(new NotifyMail($mailData));
+        // Mail::to($staff->email)->send(new NotifyMail($mailData));
 
         return redirect()->back()->with('success', 'One claim has been rejected');
     }

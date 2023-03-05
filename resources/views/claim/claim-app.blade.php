@@ -48,8 +48,14 @@
                                 <td><input class="form-select" value="{{$milleage->project}} " disabled></select></td>
                                 @endif
                                 <td><input class="form-select" value="{{$milleage->vehicle}}" disabled></select></td>
-                                <td><input type="text" class="form-control" value="{{$milleage->origin}}" disabled></td>
-                                <td><input type="text" class="form-control" value="{{$milleage->destination}}"  disabled></td>
+                                <td colspan="2">
+                                    <div class="d-flex gap-1">
+                                        <input type="text" class="form-control" value="{{$milleage->origin}}" disabled>
+                                        <i class="fa-solid fa-circle-arrow-right mx-2 text-primary my-auto"></i>
+                                        <input type="text" class="form-control" value="{{$milleage->destination}}"  disabled>
+                                    </div>
+                                        <p class="text-center pt-2 m-0 p-0" style="font-size: 0.8rem">Detail: {{$milleage->detail}}</p>
+                                </td>
                                 <td class="text-center"><button type ="button" class="btn btn-primary"disabled><b><i class="fa-solid fa-calculator"></i></b></button></td>
                                 <td><input type="text" class="form-control text-center" name="milleage" value="{{$milleage->total}}"  disabled/></td>
                                 <td><input type="text" class="form-control text-center" value="{{$milleage->distance}}"  disabled/></td>
@@ -70,7 +76,7 @@
                                 @endforeach
                             </select>
                             </td>
-                            <td><select id="vehicle" name="vehicle" class="form-select" required>
+                            <td><select id="vehicle" name="vehicle" class="form-select" required onchange="resetTotal()">
                                 <option value="" disabled selected>Choose vehicle</option>
                                 <option value="car"selected>car</option>
                                 <option value="motor">motor</option>
@@ -79,11 +85,35 @@
                             <td><input type="text" class="form-control" name="origin" id="departure" placeholder="Enter your origin" required></td>
                             <td><input type="text" class="form-control" name="destination" id="destination" placeholder="Enter your destination " required></td>
                             <td class="text-center"><button type ="button" class="btn btn-primary" id="calc" name="calc"  onclick="calculate()"><b><i class="fa-solid fa-calculator"></i></b></button></td>
-                            <td><input type="text" class="form-control text-center input" name="milleage" id ="milleage" value="0.00"/></td>
-                            <td><input type="text" class="form-control text-center" name="distance" id ="distance" value="0.00" /></td>
-                            <td class="text-center">
-                                <button type="submit" name="NEW" class="btn btn-outline-primary button">+</button>
-                            </td>
+                            <td><input type="text" class="form-control text-center input" name="milleage" id ="milleage" value="0.00" readonly/></td>
+                            <td><input type="text" class="form-control text-center" name="distance" id ="distance" value="0.00" readonly/></td>
+                            <td><button data-bs-toggle="modal" data-bs-target="#addMilleage" name="NEW" class="btn btn-outline-primary button">+</button></td>
+                                <!-- Modal -->
+                                <div class="modal fade" id="addMilleage" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">TRIP DETAILS</b></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row g-3 text-start">
+                                                <div class="col-md-12">
+                                                    <label for="skill_summary" class="form-label">Trip Detail</label>
+                                                    <input type="text" class="form-control" name="detail" placeholder="Describe the detail of your trip" required>
+                                                </div>       
+                                            </div>
+                                            
+                                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary fw-bold"><b>Add Claim</b></button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Close</b></button>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
                         </tr>
                         {!! Form::close() !!} 
                     </table>
@@ -102,6 +132,17 @@
             }
 
             else return true;
+        }
+
+        function resetTotal(){
+            let milleage = document.getElementById("milleage");
+            let distance = document.getElementById("distance");
+
+            milleage.value = 0.00;
+            $('#milleage').html(milleage.value);
+            distance.value = 0.00;
+            $('#distance').html(distance.value);
+
         }
     </script>
     <div class="accordion-item">
@@ -255,7 +296,7 @@
         }
 
         else{
-            milleage = "Choose vehicle.";
+            alert ("Choose vehicle.");
             $('#distance').html(milleage);
         }
         

@@ -32,7 +32,7 @@
                                             <span class="text-white fw-bolder badge bg-primary width-status">RM {{number_format((float)ClaimController::countAmount($ref), 2, '.', '')}}</span>
                                         </div>
                                         <div class="d-grid my-auto">
-                                            <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->name}} </div>
+                                            <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->first()->name}} </div>
                                             <div class="fw-bolder text-capitalize" style="font-size: 1.0rem;">Claim ID: {{$ref}} 
                                                 <button class="badge bg-primary rounded-pill"><a href="/claim/{{$ref}}" target="_blank" class="text-decoration-none text-white">View File</a></button>
                                             </div>
@@ -51,7 +51,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Approve <b>{{$var->name}}'s </b>Claim?</h5>
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Approve <b>{{$var->first()->name}}'s </b>Claim?</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -70,7 +70,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title text-center" id="exampleModalLabel">Reject <b>{{$var->name}}'s </b>Claim?</h5>
+                                        <h5 class="modal-title text-center" id="exampleModalLabel">Reject <b>{{$var->first()->name}}'s </b>Claim?</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -80,7 +80,7 @@
                                                 <label for="reject_reason" class="form-label">Reject Reason:</label>
                                                 <input type="text"  maxlength="50" class="form-control" name="reject_reason" placeholder="Specify why you reject this application..."required>
                                             </div>
-                                            <input type="hidden" class="form-control" value="{{$var->staff_id}}" name="staff_id">
+                                            <input type="hidden" class="form-control" value="{{$var->first()->staff_id}}" name="staff_id">
                                         </div>
                                         
                                         
@@ -115,7 +115,7 @@
                                     <span class="text-white fw-bolder badge bg-primary width-status">RM {{number_format((float)ClaimController::countAmount($ref), 2, '.', '')}}</span>
                                 </div>
                                 <div class="d-grid my-auto">
-                                    <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->name}} 
+                                    <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->first()->name}} 
                                         <span class="text-white fw-bolder badge bg-success ms-2">#PAID</span>
                                     </div>
                                     <div class="fw-bolder text-capitalize" style="font-size: 1.0rem;">Claim ID: {{$ref}} 
@@ -151,7 +151,7 @@
                                         <span class="text-white fw-bolder badge bg-primary width-status">RM {{number_format((float)ClaimController::countAmount($ref), 2, '.', '')}}</span>
                                     </div>
                                     <div class="d-grid my-auto">
-                                        <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->name}} 
+                                        <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->first()->name}} 
                                             <span class="text-white fw-bolder badge bg-danger ms-2">#REJECTED</span>
                                         </div>
                                         <div class="fw-bolder text-capitalize" style="font-size: 1.0rem;">Claim ID: {{$ref}} 
@@ -186,13 +186,16 @@
                                         <i class="fa-solid fa-file-invoice-dollar text-dark fa-2x mx-auto"></i>
                                         <span class="text-white fw-bolder badge bg-primary width-status">RM {{number_format((float)ClaimController::countAmount($ref), 2, '.', '')}}</span>
                                     </div>
-                                    <div class="d-grid my-auto">
-                                        <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->name}} 
-                                            @if ($var->status === 1)
-                                            <span class="text-white fw-bolder badge bg-success ms-2">#PAID</span>
-                                            @endif
 
-                                            @if ($var->status === 2)
+                                    <div class="d-grid my-auto">
+                                        <div class="fst-italic text-uppercase" style="font-size: 1.2rem;"><b>Name: </b>{{$var->first()->name}} 
+                                            @if ($var->contains('status', 1)) 
+                                                <span class="text-white fw-bolder badge bg-success ms-2">#PAID</span>
+
+                                            @elseif ($var->contains('status', 0))
+                                            <span class="text-white fw-bolder badge bg-danger ms-2"></span>
+
+                                            @else
                                             <span class="text-white fw-bolder badge bg-danger ms-2">#REJECTED</span>
                                             @endif
                                         </div>
@@ -203,11 +206,11 @@
                                 </div>
 
                                 <div class="d-grid gap-2 my-auto">
-                                    @if ($var->status === 0)
+                                    @if ($var->contains('status', 0))
                                         <button data-bs-target="#approve1{{$ref}}" data-bs-toggle="modal" class="badge bg-success rounded-pill width-status ">Approve</button>
                                         <button data-bs-target="#reject1{{$ref}}" data-bs-toggle="modal" class="badge bg-danger rounded-pill width-status ">Reject</button>
 
-                                    @elseif ($var->status === 2)
+                                    @elseif ($var->contains('status', 1))
                                         <button class="badge bg-success rounded-pill width-status opacity-75" disabled><a class="text-decoration-none text-white">Approved</a></button>
                                         <button class="badge bg-danger rounded-pill width-status opacity-75" disabled><a class="text-decoration-none text-white">Rejected</a></button>
                                         
@@ -225,7 +228,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title text-center" id="exampleModalLabel">Approve <b>{{$var->name}}'s </b>Claim?</h5>
+                                            <h5 class="modal-title text-center" id="exampleModalLabel">Approve <b>{{$var->first()->name}}'s </b>Claim?</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -244,7 +247,7 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title text-center" id="exampleModalLabel">Reject <b>{{$var->name}}'s </b>Claim?</h5>
+                                        <h5 class="modal-title text-center" id="exampleModalLabel">Reject <b>{{$var->first()->name}}'s </b>Claim?</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -254,7 +257,7 @@
                                                 <label for="reject_reason" class="form-label">Reject Reason:</label>
                                                 <input type="text" class="form-control" maxlength="50" name="reject_reason" placeholder="Specify why you reject this application..."required>
                                             </div>
-                                            <input type="hidden" class="form-control" value="{{$var->staff_id}}" name="staff_id">
+                                            <input type="hidden" class="form-control" value="{{$var->first()->staff_id}}" name="staff_id">
                                         </div>
                                         
                                         

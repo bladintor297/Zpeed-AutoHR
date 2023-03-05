@@ -1,36 +1,43 @@
-@extends('layouts.app')
+@extends('layouts.welcome')
 @section('content')
 @guest
-    <div class="container shadow-lg p-3 mb-5 rounded mh-75 mt-5 bg-dark">
-        <div class="row h-100 align-items-center ">
-            {{-- <div class="position-relative">
-                <img class="position-absolute top-0 start-0" src=' {{asset('storage/images/zpeed-logo-white.png')}}'  width="150rem" />
-            </div> --}}
-            <div class="col text-center ms-5 ">
-                
-                <p class="display-6 fw-bolder text-warning mb-0"> Welcome to</p>
-                <p class="display-4 fw-bolder text-warning mb-0"> ZPEED AUTO-HR SYSTEM</p>
-                <p class="text-start ms-3 fs-4 text-light mb-4"> This is your all-in-one bot to assist you to manage your
-                    <span class="badge bg-warning text-dark rounded-pill fs-4 ">profile</span> , 
-                    <span class="badge bg-primary text-dark rounded-pill fs-4 ">leave</span> ,
-                    <span class="badge bg-success text-dark rounded-pill fs-4 ">claim</span> , &
-                    <span class="badge bg-danger text-dark rounded-pill fs-4 ">projects</span> . Explore now !
+    <div class="container col-xxl-8 px-3 py-3 my-5 text-bg-white rounded shadow-lg about">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-3">
+          <div class="col-10 col-sm-8 col-lg-6 mx-auto">
+            <img src="https://meek.media/wp-content/uploads/2022/06/professional-seo-service.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+          </div>
+          <div class="col-lg-6 ps-5">
+            <h1 class="display-5 fw-bold lh-1 my-3 text-warning">Zpeed Auto HR</h1>
+            <p class="lead mx-2 text-center" align="justify">
+              Zpeed Auto-HR System is an internal Human Resource Management System (HRMS) that 
+              is designated for the staffs to perform HR-related tasks in Zpeed Solutions Sdn. Bhd.
+            </p>
+            <div class="d-grid gap-2 mt-4 col-6 mx-auto">
+                <p class="lead">
+                    <a href="{{ route('login') }}" class=" border-white py-2 px-5 btn-login rounded-pill">Login Now </a>
                 </p>
-                <hr class="bg-danger border-3 border-top col-5 mx-auto border-warning ">
-                
-                <div class="d-flex gap-2 justify-content-center">
-                    <a class="btn btn-warning px-5 fw-bolder" href="{{ route('login') }}">Login Now</a>
-                </div>
-                
-            </div>
-            <div class="col-sm-5">
-                <img src="{{ URL::asset('storage/images/robot.png'); }}" alt ="x"style="width: 100%; " />
             </div>
             
-            
+          </div>
         </div>
-        {{--  --}}
-    </div>
+      </div>
+    {{-- <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="mb-auto">
+        </header>
+
+        <main class="px-3">
+        <h1>Zpeed Auto-HR.</h1>
+        <p class="lead">
+          Zpeed Auto-HR System is an Human Resource Management System (HRMS) that is designated for the staffs to perform HR-related tasks in Zpeed Solutions Sdn. Bhd.
+        </p>
+        
+        </main>
+
+        <footer class="mt-auto text-white-50">
+        
+        </footer>
+    </div> --}}
+
 @else
     @include('home')
 @endguest

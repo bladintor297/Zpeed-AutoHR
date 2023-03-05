@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Claim;
 use Illuminate\Http\Request;
 use App\Models\Milleage;
+use App\Models\Staff;
 use Illuminate\Support\Facades\Auth;
 
 class MilleageController extends Controller
@@ -49,6 +51,7 @@ class MilleageController extends Controller
         $milleage->vehicle = $request->input('vehicle');
         $milleage->total = $request->input('milleage');
         $milleage->distance = $request->input('distance');
+        $milleage->detail = $request->input('detail');
         $milleage->origin = $request->input('origin');
         $milleage->destination = $request->input('destination');
         $milleage->save();
@@ -99,7 +102,26 @@ class MilleageController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if ($request->input('type') === 'm'){
 
+            $milleage = Milleage::find($id);
+            $milleage->date = $request->input('date');
+            $milleage->project = $request->input('project');
+            if(is_null($request->input('detail')))
+            $milleage->detail = 'null';
+            else
+            $milleage->detail = $request->input('detail');
+            $milleage->save();
+        }
+        else{
+            $claim = Claim::find($id);
+            $claim->date = $request->input('date');
+            $claim->project = $request->input('project');
+            $claim->detail = $request->input('detail');
+            $claim->save();
+        }
+
+        return redirect()->back()->with('success', 'Claim data has been updated.');
 
     }
 
@@ -113,6 +135,26 @@ class MilleageController extends Controller
     {
         $milleage = Milleage::find($id);
         $milleage->delete();
+        return back();
+    }
+
+    public function rejectOneClaim(Request $request, $id)
+    {
+
+        if ($request->input('type') === 'm'){
+            $milleage = Milleage::find($id);
+            $milleage->status = 2;
+            $milleage->reject_reason = $request->input('reject_reason');
+            $milleage->save();
+        }
+
+        else{
+            $claim = Claim::find($id);
+            $claim->status = 2;
+            $claim->reject_reason = $request->input('reject_reason');
+            $claim->save();
+        }
+
         return back();
     }
 }

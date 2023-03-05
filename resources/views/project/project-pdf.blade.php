@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Claim Report</title>
+		<title>Project Report</title>
 
 		<style>
             .page-main {
@@ -44,8 +44,8 @@
                 padding-top: 12px;
                 padding-bottom: 12px;
                 text-align: left;
-                background-color: #04AA6D;
-                color: white;
+                background-color: #bb8c00;
+                color: rgb(0, 0, 0);
                 text-align: center;
             }
 
@@ -110,7 +110,7 @@
                         <td>RM {{number_format((float)$totalall, 2, '.', '')}}</td>
                     </tr>
                     <tr>
-                        <th>Total Approved</th>
+                        <th>Total #Paid</th>
                         <td>RM {{number_format((float)$total, 2, '.', '')}}</td>
                     </tr>
                     <tr>
