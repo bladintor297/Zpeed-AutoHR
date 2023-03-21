@@ -89,16 +89,6 @@
                                 <td scope="col">{{$claim->detail}}</td>
                               </tr>
                               <tr>
-                                <th>Trip</th>
-                                <td scope="col">
-                                    <div class="d-grid text-center" style="font-size: 0.7rem">
-                                        <span>{{$claim->origin}}</span> 
-                                        <span class="text-primary"><i class="fa-solid fa-circle-arrow-down mx-2"></i></span> 
-                                        <span>{{$claim->destination}} </span>
-                                    </div>
-                                </td>
-                              </tr>
-                              <tr>
                                 <th>Project</th>
                                 <td scope="col">
                                     @foreach ($projectx as $project)

@@ -123,14 +123,8 @@ class ClaimController extends Controller
     }
 
     public static function countAmount($id){
-        $amountclaim= Claim::where('ref_id', $id)->sum('amount');
-        $amountmilleage=Milleage::where('ref_id',$id)->sum('total');
-        return ($amountclaim + $amountmilleage);
-    }
-
-    public static function countApproved($id){
-        $amountclaim= Claim::where('ref_id', $id)->where('status', '=', 1)->sum('amount');
-        $amountmilleage=Milleage::where('ref_id',$id)->where('status', '=', 1)->sum('total');
+        $amountclaim= Claim::where('ref_id', $id)->where('status', '!=', 2)->sum('amount');
+        $amountmilleage=Milleage::where('ref_id',$id)->where('status', '!=', 2)->sum('total');
         return ($amountclaim + $amountmilleage);
     }
 
@@ -397,8 +391,8 @@ class ClaimController extends Controller
 
         $admins = Staff::where('role', '1')->get();
 
-       foreach ($admins as $admin)
-       Mail::to($admin->email)->send(new NotifyMail($mailData));
+  	foreach ($admins as $admin)
+        Mail::to($admin->email)->send(new NotifyMail($mailData));
 
         return back()->with ('success', 'Your claim has been submitted.');
     }
@@ -465,8 +459,8 @@ class ClaimController extends Controller
 
         
         $staff = Staff::where('staff_id', $staff->staff_id)->first();
-        // return $staff;
-        // Mail::to($staff->email)->send(new NotifyMail($mailData));
+        return $staff;
+        Mail::to($staff->email)->send(new NotifyMail($mailData));
 
         return redirect()->back()->with('success', 'One claim has been approved');
     }
@@ -496,7 +490,7 @@ class ClaimController extends Controller
             'title' => 'Claim Rejected',
             'body' => 'Your claim id with reference number '.$id.' is rejected due to '.$reason.'.',
         ];
-        // Mail::to($staff->email)->send(new NotifyMail($mailData));
+        Mail::to($staff->email)->send(new NotifyMail($mailData));
 
         return redirect()->back()->with('success', 'One claim has been rejected');
     }

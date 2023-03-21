@@ -78,9 +78,6 @@ class HomeController extends Controller
         //Pending Leave
         $pendingleaves = Leave::where('status', '0')->whereYear('start_date', $currentyear)->get();
 
-        //My Pending Leaves
-        $mypendingleaves = Leave::where('status', '0')->where('staff_id', str_pad(Auth::id(), 3, '0', STR_PAD_LEFT))->whereYear('start_date', $currentyear)->get();
-
         //Absents
         $absents = DB::table('staff')->join('leave', 'staff.staff_id', '=', 'leave.staff_id')
                                     ->where('leave.status', '1')->whereYear('leave.start_date', $currentyear)->get();
@@ -140,7 +137,7 @@ class HomeController extends Controller
         return view('home')->with(['pendingclaims'=>$pendingclaims, 'paid'=>$paid, 'pendingpay'=>$pendingpay, 'totalclaims'=>$totalclaims,
                                     'pendingleaves'=>$pendingleaves, 'absentslist'=>(array_unique($absentslist)), 'abesence_rate'=>$abesence_rate,
                                     'completeprojects'=>$completeprojects, 'activeprojects'=>$activeprojects, 'projects'=>$projects,
-                                    'mypendingclaims'=>$mypendingclaims, 'mypaid'=>$mypaid, 'mypendingpay'=>$mypendingpay, 'mypendingleaves'=>$mypendingleaves,
+                                    'mypendingclaims'=>$mypendingclaims, 'mypaid'=>$mypaid, 'mypendingpay'=>$mypendingpay,
     ]);
 	    }else return view('welcome');
     }

@@ -34,6 +34,10 @@ return [
     */
 
     'mailers' => [
+        'office365mail' => [
+            'transport' => 'office365mail',
+        ],
+        
         'smtp' => [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),

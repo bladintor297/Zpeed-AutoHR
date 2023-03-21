@@ -33,7 +33,7 @@
               <input type="checkbox" value="remember-me"  name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}> Remember me
             </label>
             @if (Route::has('password.request'))
-                <a class="btn btn-link" href="{{ route('password.request') }}">
+                <a class="btn btn-link"  href="{{ route('forget.password.get') }}">
                     {{ __('Forgot Your Password?') }}
                 </a>
             @endif

@@ -94,6 +94,21 @@
             padding: 10px;
         }
 
+        @media (max-width:768px){
+            .main {
+                display: grid;
+
+            }
+
+            .main .att-board {
+                width: 100%;
+            }
+
+            .main .summary{
+                width: 100%;
+            }
+        }
+
         
     </style>
     

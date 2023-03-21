@@ -6,21 +6,25 @@
     {{-- @if(HomeController::getApproveStatus()) --}}
 
     @if((Session::get('role')) == '1')
-    <div class="container-fluid">
-        <div class="row">
-          <div class="col-3 mt-5 pt-1">
+    <div class="container-fluid ">
+        <div class="row main">
+          <div class="col-3 mt-5 pt-1 att-board">
               <div class="card overflow-auto" style="height: 15rem; " >
                 <div class="card-body">
                   <p class="text-center fs-5 fw-bold">Who's On Leave<br></p>
-                  <ul class="list-group list-group-numbered bg-body">
- 		   @foreach ($absentslist as $absent)
-                   <li class="list-group-item">{{$absent}}</li>  
-                   @endforeach
-                  </ul>
+                  <ol class="list-group list-group-numbered bg-body">
+ 		              @if (count($absentslist)>0)
+                    @foreach ($absentslist as $absent)
+                      <li class="list-group-item" style="font-size:0.8rem;">{{$absent}}</li>  
+                    @endforeach
+                  @else
+                      <p class="text-center mt-5" style="font-size: 0.8rem">No one on leave today.</p>
+                  @endif
+                  </ol>
                 </div>
               </div>
           </div>
-          <div class="col-9">
+          <div class="col-9 summary">
             <section>
               <p class="text-start fs-5 mt-2 fw-bold">Claims Summary<br></p>
                 <div class="row">
@@ -234,7 +238,7 @@
                       <div class="card-body">
                         <div class="d-flex justify-content-between px-md-1">
                           <div>
-                            <h3 class="text-danger">{{count($pendingleaves)}} leaves</h3>
+                            <h3 class="text-danger">{{count($mypendingleaves)}} leaves</h3>
                             <p class="mb-0">Pending Approval</p>
                           </div>
                           <div class="align-self-center">
